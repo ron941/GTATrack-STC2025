@@ -1,0 +1,107 @@
+# Deep-EIoU Reproducibility Guide  
+**Team:** *where is player18*  
+**System Used in STC-2025 Submission*
+
+---
+
+## 📁 Directory Structure
+
+```
+STC/
+└─ Deep-EIoU/
+      └─Deep-EIoU/
+              ├── tra_new.py                           # Main tracking entry point
+              ├── tracker/
+              │      └── Deep_EIoU.py                 # Core tracker implementation
+              ├── checkpoints/
+              │      └── sports_model.pth.tar-60      # ReID model
+              └── data/
+                      └── football/
+                              ├── img1/                    # Frame sequence input
+                              └── det1/                    # MOT-style detection txt
+```
+
+---
+
+## 🖥️ Environment
+
+- **OS**: Ubuntu 20.04  
+- **Python**: 3.10.18  
+- **PyTorch**: 2.7.1 + CUDA 11.8  
+- **GPU**: RTX 3090 (24 GB)  
+- **CUDA available**: ✅  
+
+All dependencies are listed in `requirements.txt`.  
+To recreate the environment:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 📂 Data Preparation: Frames and Detection
+
+To run Deep-EIoU, please first prepare the video frames and detection results in MOT format.
+From the folder `STC/Deep-EIoU/Deep-EIoU/`
+
+### 🖼️ 1.Use img1.py convert the video into jpg files and save to `img1/`
+
+
+
+### 📄 2.Use txt.py to save MOT Format into `det1`
+
+
+### ⚠️ Notes
+
+- `frame_id` starts from 1 and matches the image names (`000001.jpg`, etc).
+- Ensure `img1/` and `det1/` are frame-aligned.
+
+---
+
+## ▶️ Command to Run Deep-EIoU
+
+From the folder `STC/Deep-EIoU/Deep-EIoU/`, execute:
+
+```bash
+python img1.py
+python txt.py
+python tra_new.py \
+  --data-root data/football \
+  --img-dir img1 \
+  --det-dir det1 \
+  --output tracking_results_128057.txt \
+  --reid-model checkpoints/sports_model.pth.tar-60 \
+  --with-reid \
+  --proximity_thresh 0.5 \
+  --appearance_thresh 0.25 \
+  --track-high-thresh 0.7 \
+  --track-low-thresh 0.4 \
+  --new-track-thresh 0.8 \
+  --track-buffer 90 \
+  --match-thresh 0.8 \
+  --min-box-area 20 \
+  --occ-iou-thresh 0.6 \
+  --occ-sim-thresh 0.75 \
+  --occ-buffer-frames 48
+```
+
+---
+
+## 📄 Input / Output Format
+
+- **Input frames**: `data/football/img1/`  
+- **Detection file**: `data/football/det1/`, in MOT format:
+  ```
+  <frame>, -1, <x>, <y>, <w>, <h>, <conf>, -1, -1, -1
+  ```
+- **Output**: `tracking_results_128057.txt` (also in MOT format), ready for GTA-Link.
+
+---
+
+## 📎 Appendix
+
+- `requirements.txt` is provided alongside this document. It includes essential packages like:
+  - `ultralytics==8.0.208`
+  - `torchreid` (custom fork)
+  - `opencv-python`, `deep-sort-realtime`, `matplotlib`, etc.

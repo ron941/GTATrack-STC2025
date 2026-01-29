@@ -1,0 +1,7 @@
+path: /ssd1/ron_soccer/yolo_finetune_dataset
+train: images/train
+val: images/val
+
+nc: 1  # ← 根據實際類別數量修改
+names: ['player']  # ← 修改成你的實際類別名稱
+

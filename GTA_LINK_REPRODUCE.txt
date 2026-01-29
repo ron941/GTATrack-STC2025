@@ -1,0 +1,80 @@
+# GTA-Link Reproducibility Guide  
+**Team:** *where is player18*  
+**Offline Post-processing Module Used in STC-2025 Submission*
+
+---
+
+## 📌 Introduction
+
+We used the official implementation of **GTA-Link** for offline identity refinement.  
+
+---
+
+## 📁 Directory Structure (Simplified)
+
+```
+STC/
+└── gta-link/
+    ├── generate_tracklets.py
+    ├── refine_tracklets.py
+    ├── reid_checkpoints/
+    │    └── sports_model.pth.tar-60
+    ├── submit/
+    │    └── intermediate.txt      # output from Deep-EIoU
+    └── dataset/
+          └── 128057/
+            ├── img1/             # image frames
+            └── det.txt           # detection results (MOT format)
+```
+
+---
+
+## ▶️ Commands Used
+
+### 1. Tracklet Generation
+
+```bash
+python generate_tracklets.py \
+  --model_path reid_checkpoints/sports_model.pth.tar-60 \
+  --data_path dataset \
+  --pred_dir submit \
+  --tracker intermediate.txt
+```
+
+### 2. Tracklet Refinement (GTA-Link)
+
+```bash
+python refine_tracklets.py \
+  --input_dir submit \
+  --output_file submit/tracking_results.txt \
+  --use_split \
+  --min_len 50 \
+  --eps 0.65 \
+  --min_samples 15 \
+  --max_k 2 \
+  --use_connect \
+  --spatial_factor 1.5 \
+  --merge_dist_thres 0.35
+```
+
+---
+
+## 🧩 Input Format
+
+- `intermediate.txt`: MOT-style tracking output from Deep-EIoU. This is passed to `generate_tracklets.py`.
+- `dataset/<video_id>/img1/`: Folder containing extracted frames as `000001.jpg`, `000002.jpg`, etc.
+
+
+---
+
+## ✅ Notes
+
+- The GTA-Link version used is the official repo with no structural modification.
+- All identity refinement was done using the parameters shown above.
+- For ReID embedding, the same `sports_model.pth.tar-60` used in Deep-EIoU was reused.
+
+---
+
+## 📎 Reference
+
+GTA-Link: [https://github.com/sjc042/gta-link](https://github.com/sjc042/gta-link)

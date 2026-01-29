@@ -1,0 +1,7 @@
+# dataset.yaml
+path: /ssd1/ron_soccer/yolo_dataset
+train: images/train
+val: images/val
+
+nc: 1
+names: ['player']
