@@ -73,8 +73,7 @@ This project intentionally avoids refactoring external codebases into a unified 
 GTATrack-STC2025/
 ├── Deep-EIoU/                          # official Deep-EIoU repository (unmodified)
 ├── gta-link/                           # official GTA-Link repository (unmodified)
-├── ultralytics-main/
-│   └── ultralytics-main/               # YOLOv11x inference code
+├── ultralytics-main/                   # YOLOv11x inference code
 ├── DEEP_EIOU_REPRODUCE.txt              # Deep-EIoU commands and parameters
 ├── GTA_LINK_REPRODUCE.txt               # GTA-Link refinement commands
 ├── YOLOV11X_REPRODUCE.txt               # YOLOv11x inference details
